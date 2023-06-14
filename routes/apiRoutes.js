@@ -3,15 +3,20 @@ const {v4: uuidv4} = require("uuid");
 const {readFromFile, readAndAppend, readAndDelete} = require("../utils/helpers")
 
 router.get("/notes", (req, res) => {
-
+    readFromFile("./db/db.json").then((notes) => res.json(JSON.parse(notes)))
 })
 
-router.get("/notes", (req, res) => {
-    
+router.post("/notes", (req, res) => {
+    const newNote = req.body;
+    newNote.id = uuidv4();
+
+    readAndAppend(newNote, "./db/db.json");
+    res.json(newNote)
 })
 
-router.get("/notes/:id", (req, res) => {
-    
+router.delete("/notes/:id", (req, res) => {
+    readAndDelete(req.params.id, "./db/db.json");
+    res.json({ ok: true})
 })
 
 
